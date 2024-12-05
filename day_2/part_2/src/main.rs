@@ -52,38 +52,43 @@ fn main() {
             (Some(x), Some(y)) if x == y => Some(x),
             _ => None,
         };
-        
+
         let matches = |x, y, is_asc| matches!(cmp(x, y), Some(x) if x == is_asc);
-        
+
         // three of the first four must form our asc/desc determination
-        let (mut prev, mut skipped, is_asc) = if let Some(is_asc) = three_way_cmp(first, second, third) {
-            (third, false, is_asc)
-        } else {
-            let checks = [(first, second, next), (first, third, next), (second, third, next)];
-            let mut check = checks.iter();
+        let (mut prev, mut skipped, is_asc) =
+            if let Some(is_asc) = three_way_cmp(first, second, third) {
+                (third, false, is_asc)
+            } else {
+                let checks = [
+                    (first, second, next),
+                    (first, third, next),
+                    (second, third, next),
+                ];
+                let mut check = checks.iter();
 
-            loop {
-                let (x, y, z) = match check.next() {
-                    None => continue 'outer,
-                    Some(check) => check,
-                };
+                loop {
+                    let (x, y, z) = match check.next() {
+                        None => continue 'outer,
+                        Some(check) => check,
+                    };
 
-                match three_way_cmp(*x, *y, *z) {
-                    Some(is_asc) => {
-                        next = match iter.next() {
-                            None => {
-                                safe += 1;
-                                continue 'outer;
-                            },
-                            Some(next) => next,
-                        };
+                    match three_way_cmp(*x, *y, *z) {
+                        Some(is_asc) => {
+                            next = match iter.next() {
+                                None => {
+                                    safe += 1;
+                                    continue 'outer;
+                                }
+                                Some(next) => next,
+                            };
 
-                        break (*z, true, is_asc)
-                    },
-                    None => {},
+                            break (*z, true, is_asc);
+                        }
+                        None => {}
+                    }
                 }
-            }
-        };
+            };
 
         loop {
             let hold = match iter.next() {
@@ -92,7 +97,7 @@ fn main() {
                         safe += 1;
                     }
                     break;
-                },
+                }
                 Some(x) => x,
             };
 
