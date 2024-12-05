@@ -20,12 +20,12 @@ fn main() {
 
         for c in b"mul(" {
             match next {
-                Some(Ok(b)) if enabled && b == *c => {},
+                Some(Ok(b)) if enabled && b == *c => {}
 
                 Some(Ok(b)) if b == b'd' => {
-                    let next  = cursor.next();
+                    let next = cursor.next();
                     match next {
-                        Some(Ok(b'o')) => {},
+                        Some(Ok(b'o')) => {}
                         None => break 'outer,
                         _ => {
                             continue_with = next;
@@ -35,7 +35,7 @@ fn main() {
 
                     let next = cursor.next();
                     match next {
-                        Some(Ok(b'n')) => {},
+                        Some(Ok(b'n')) => {}
 
                         Some(Ok(b'(')) => {
                             let next = cursor.next();
@@ -45,7 +45,7 @@ fn main() {
                                 continue_with = next;
                             }
                             continue 'outer;
-                        },
+                        }
 
                         None => break 'outer,
 
@@ -58,23 +58,23 @@ fn main() {
                     for c in b"'t()" {
                         let next = cursor.next();
                         match next {
-                            Some(Ok(b)) if b == *c => {},
+                            Some(Ok(b)) if b == *c => {}
                             Some(_) => {
                                 continue_with = next;
                                 continue 'outer;
-                            },
+                            }
                             None => break 'outer,
                         }
                     }
 
                     enabled = false;
                     continue 'outer;
-                },
+                }
 
                 Some(x) => {
                     assert!(x.is_ok(), "Could not read byte");
                     continue 'outer;
-                },
+                }
 
                 None => break 'outer,
             }
@@ -95,7 +95,7 @@ fn main() {
                     if num.len() > 3 {
                         continue 'outer;
                     }
-                },
+                }
 
                 Some(Ok(b',')) if is_num_1 => {
                     if num.len() == 0 {
@@ -104,7 +104,7 @@ fn main() {
 
                     is_num_1 = false;
                     num = &mut num_2;
-                },
+                }
 
                 Some(Ok(b')')) if !is_num_1 => {
                     if num.len() == 0 {
@@ -112,16 +112,16 @@ fn main() {
                     }
 
                     break (num_1, num_2);
-                },
+                }
 
                 Some(_) => {
                     continue_with = next;
                     continue 'outer;
-                },
+                }
 
                 None => break 'outer,
             }
-        
+
             next = cursor.next();
         };
 

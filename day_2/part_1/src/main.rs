@@ -1,4 +1,7 @@
-use std::{fs::File, io::{BufRead, BufReader}};
+use std::{
+    fs::File,
+    io::{BufRead, BufReader},
+};
 
 fn main() {
     let path = std::env::args()

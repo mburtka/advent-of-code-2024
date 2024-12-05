@@ -24,11 +24,11 @@ fn main() {
             }
         }) {
             match cursor.next() {
-                Some(Ok(b)) if b == *c => {},
+                Some(Ok(b)) if b == *c => {}
                 Some(x) => {
                     assert!(x.is_ok(), "Could not read byte");
                     continue 'outer;
-                },
+                }
                 None => break 'outer,
             }
         }
@@ -49,7 +49,7 @@ fn main() {
                     if num.len() > 3 {
                         continue 'outer;
                     }
-                },
+                }
 
                 Some(Ok(b',')) if is_num_1 => {
                     if num.len() == 0 {
@@ -58,7 +58,7 @@ fn main() {
 
                     is_num_1 = false;
                     num = &mut num_2;
-                },
+                }
 
                 Some(Ok(b')')) if !is_num_1 => {
                     if num.len() == 0 {
@@ -66,16 +66,16 @@ fn main() {
                     }
 
                     break (num_1, num_2);
-                },
+                }
 
                 Some(Ok(x)) => {
                     skip_m = x == b'm';
                     continue 'outer;
-                },
+                }
 
                 Some(Err(_)) => {
                     panic!("Could not read byte");
-                },
+                }
 
                 None => break 'outer,
             }
