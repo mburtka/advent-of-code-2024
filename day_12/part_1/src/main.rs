@@ -20,7 +20,7 @@ fn main() {
 fn process(reader: impl Read) -> usize {
     let bytes = reader.bytes().map(|byte| byte.expect("Cannot read byte"));
     let cap = bytes.size_hint().1.unwrap_or(bytes.size_hint().0);
-    
+
     let mut columns = None;
     let mut grid = Vec::with_capacity(cap);
 
@@ -104,15 +104,19 @@ impl Grid {
         self._solve(origin, [Dir::Right, Dir::Down], &mut region, &mut visited);
         let mut total = region.cost();
 
-        
         while origin < self.grid.len() {
             if visited[origin] {
                 origin += 1;
                 continue;
             }
-            
+
             let mut region = Region::new();
-            self._solve(origin, [Dir::Right, Dir::Down, Dir::Left, Dir::Up], &mut region, &mut visited);
+            self._solve(
+                origin,
+                [Dir::Right, Dir::Down, Dir::Left, Dir::Up],
+                &mut region,
+                &mut visited,
+            );
 
             total += region.cost();
         }
@@ -120,7 +124,13 @@ impl Grid {
         total
     }
 
-    fn _solve<const N: usize>(&self, offset: usize, next: [Dir; N], region: &mut Region, visited: &mut Vec<bool>) {
+    fn _solve<const N: usize>(
+        &self,
+        offset: usize,
+        next: [Dir; N],
+        region: &mut Region,
+        visited: &mut Vec<bool>,
+    ) {
         visited[offset] = true;
         region.area += 1;
 
@@ -150,11 +160,17 @@ struct Region {
 
 impl Region {
     fn new() -> Self {
-        Self { area: 0, perimeter: 0 }
+        Self {
+            area: 0,
+            perimeter: 0,
+        }
     }
 
     fn origin() -> Self {
-        Self { area: 0, perimeter: 2 }
+        Self {
+            area: 0,
+            perimeter: 2,
+        }
     }
 
     fn cost(&self) -> usize {
@@ -179,7 +195,9 @@ mod tests {
         MIIIIIJJEE
         MIIISIJEEE
         MMMISSJEEE
-        ".trim().replace(' ', "");
+        "
+        .trim()
+        .replace(' ', "");
 
         let result = process(test.as_bytes());
 

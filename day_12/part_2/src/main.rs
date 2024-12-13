@@ -20,7 +20,7 @@ fn main() {
 fn process(reader: impl Read) -> usize {
     let bytes = reader.bytes().map(|byte| byte.expect("Cannot read byte"));
     let cap = bytes.size_hint().1.unwrap_or(bytes.size_hint().0);
-    
+
     let mut columns = None;
     let mut grid = Vec::with_capacity(cap);
 
@@ -110,13 +110,16 @@ impl Grid {
                 continue;
             }
 
-            let mut region = Region { area: 0, vertices: 0 };
+            let mut region = Region {
+                area: 0,
+                vertices: 0,
+            };
             stack.push(offset);
-            
+
             while let Some(offset) = stack.pop() {
                 visited[offset] = true;
                 region.area += 1;
-                
+
                 let value = self.grid[offset];
 
                 let left = self.next(offset, Dir::Left);
@@ -214,7 +217,9 @@ mod tests {
         OOOOO
         OXOXO
         OOOOO
-        ".trim().replace(' ', "");
+        "
+        .trim()
+        .replace(' ', "");
 
         let result = process(test.as_bytes());
 
